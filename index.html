@@ -53,11 +53,13 @@
     return Array.from({ length: count }, (_, i) => {
       const id = i + 1;
       const category = categories[i % categories.length];
+      // use Unsplash query for real clothing photos
+      const query = `${prefix === 'men' ? 'men' : 'women'},${category.toLowerCase()},clothing,fashion`;
       return {
         id: `${prefix}-${id}`,
         name: `${prefix === 'men' ? "Men's" : "Women's"} ${category} #${id}`,
         price: (Math.random() * 60 + 15).toFixed(2),
-        img: `https://picsum.photos/seed/${prefix}${id}/300/400`,
+        img: `https://source.unsplash.com/300x400/?${encodeURIComponent(query)}&sig=${id}`,
         desc: `Comfortable ${category.toLowerCase()} ideal for campus life.`,
         gender: prefix
       };
@@ -67,7 +69,7 @@
   const womenProducts = generateProducts('women', 50);
   const allProducts = [...menProducts, ...womenProducts];
 
-  // Preset generic best‑sellers (first 4 of each category)
+  // Preset generic best-sellers (first 4 of each category)
   const genericRecs = [...menProducts.slice(0,2), ...womenProducts.slice(0,2)];
 
   // ----------  STATE  ----------
@@ -105,9 +107,12 @@
   // ----------  EVENTS  ----------
   document.querySelectorAll('.tab').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach(b => b.classList.replace('bg-indigo-600','bg-gray-200').classList?.remove('text-white'));
-      btn.classList.replace('bg-gray-200','bg-indigo-600');
-      btn.classList.add('text-white');
+      document.querySelectorAll('.tab').forEach(b => {
+        b.classList.remove('bg-indigo-600','text-white');
+        b.classList.add('bg-gray-200');
+      });
+      btn.classList.remove('bg-gray-200');
+      btn.classList.add('bg-indigo-600','text-white');
       activeTab = btn.dataset.tab;
       renderGrid();
     });
@@ -170,21 +175,4 @@
       }
       if (recs.length) {
         recGrid.innerHTML = '';
-        recs.forEach(r => {
-          const d = document.createElement('div');
-          d.className = 'border rounded p-2 text-center';
-          d.innerHTML = `<img src="${r.img}" class="h-24 w-full object-cover rounded mb-1"/><p class="text-xs">${r.name}</p>`;
-          recGrid.appendChild(d);
-        });
-        recBlock.classList.remove('hidden');
-      }
-    }
-
-    cartOverlay.classList.remove('hidden');
-  }
-
-  // ----------  INIT  ----------
-  renderGrid();
-  </script>
-</body>
-</html>
+        recs.forEach
